@@ -19,7 +19,7 @@ RUN git clone https://github.com/emscripten-core/emsdk.git && \
     ./emsdk install latest  && \
     ./emsdk activate latest 
 
-#RUN /bin/bash -c source . ./emsdk_env.sh
+#RUN /bin/bash -c source ./emsdk_env.sh
 ENV PATH="$PATH:/build/emsdk/fastcomp/emscripten:/build/emsdk/node/12.9.1_64bit/bin" \
     EMSDK="/build/emsdk" \
     EM_CONFIG="/root/.emscripten" \
@@ -27,11 +27,9 @@ ENV PATH="$PATH:/build/emsdk/fastcomp/emscripten:/build/emsdk/node/12.9.1_64bit/
 
 # LLVM 
 #RUN emcc && build-js.sh
-
 RUN emcc -v
-RUN echo "LLVM_ROOT = os.path.expanduser('~/Code/emscripten-fastcomp/build/Release/bin')\n" >> ~/.emscripten && \
-    echo "NODE_JS = os.path.expanduser('~/Code/node-v0.10.29-linux-x64/bin/node')\n" >> ~/.emscripten 
-
+RUN echo "LLVM_ROOT = os.path.expanduser('/build/emsdk/fastcomp/bin')\n" >> ~/.emscripten && \
+    echo "NODE_JS = os.path.expanduser('/build/emsdk/node/12.9.1_64bit/bin/node')\n" >> ~/.emscripten 
 
 # get closure compiler
 RUN mkdir closure-compiler && \
@@ -46,14 +44,15 @@ RUN unzip ./closure-compiler/compiler-latest.zip -d ./closure-compiler/
 ENV EMSCRIPTEN="/build/emsdk/fastcomp/emscripten" \
     CLOSURE_JAR="/build/closure-compiler/closure-compiler-v20190909.jar"
 
-COPY freeglut ./project/freeglut
-COPY googletest ./project/googletest
-COPY liquidfun ./project/liquidfun
+RUN mkdir project
 
 
-RUN cd project/liquidfun/Box2D/lfjs \
-    make \
-    ./uglify.sh
+#COPY freeglut ./project/freeglut
+#COPY googletest ./project/googletest
+#COPY liquidfun ./project/liquidfun
+#RUN cd project/liquidfun/Box2D/lfjs \
+#    make \
+#    ./uglify.sh
 
 # copy build with: docker cp <container>:/build/project/liquidfun/Box2D/lfjs
 #`Box2D/lfjs/index.html' in your browser

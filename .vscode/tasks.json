@@ -6,9 +6,11 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "docker build -f Dockerfile .",
-            "group": "build",
-            "default": true
+            "command": "docker build -f Dockerfile . -t liquidfunbuilder:latest",
+            "group": {
+                "kind":"build",
+                "isDefault": true
+            }
             
         }
     ]

@@ -42,3 +42,19 @@ you would leave it in.
   [Box2D]: http://box2d.org
   [Box2D/Documentation/Building/]: http://google.github.io/liquidfun/Building.html
   [Programmer's Guide]: http://google.github.io/liquidfun/Programmers-Guide.html
+
+# Build docker image for browser build
+```
+docker build -f Dockerfile -t liquidfunbuilder:latest . 
+```
+
+# Run build
+```
+docker run -it \
+    -v D:\Users\z_jan_cronus\workspace\liquidfun:/build/project  \
+    -v liquidfun_cache:/root/.emscripten_cache \
+    liquidfunbuilder:latest \
+    /bin/bash -c "cd project/liquidfun/Box2D/lfjs && make && uglify.sh"
+```
+
+

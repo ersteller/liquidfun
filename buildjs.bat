@@ -1,0 +1,1 @@
+docker run -v %~dp0:/build/project -v liquidfun_cache:/root/.emscripten_cache -it liquidfunbuilder:latest /bin/bash -c "source ./emsdk/emsdk_env.sh && cd project/liquidfun/Box2D/lfjs && make && ./uglify.sh"
