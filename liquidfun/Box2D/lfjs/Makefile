@@ -250,7 +250,9 @@ EXPORTS = EXPORTED_FUNCTIONS="[ \
 	$(B2WHEELJOINT), \
 	$(B2WORLD) \
 	]"
-	#'_GenerateOffsets', \
+#'_GenerateOffsets', \
 
+
+# no optimization for debugging otherwise O2
 bindings.js:
-	$(EMSCRIPTEN)/emcc -I../ -o lf_core.js jsBindings/jsBindings.cpp $(OBJECTS) -s $(EXPORTS) -s TOTAL_MEMORY=33554432 -O2 --js-library callbacks.js
+	$(EMSCRIPTEN)/emcc -I../ -o lf_core.js jsBindings/jsBindings.cpp $(OBJECTS) -s $(EXPORTS) -s "EXTRA_EXPORTED_RUNTIME_METHODS=['ccall','cwrap']" -s TOTAL_MEMORY=33554432 -O0 --js-library callbacks.js
