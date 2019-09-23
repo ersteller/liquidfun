@@ -42,17 +42,9 @@ RUN unzip ./closure-compiler/compiler-latest.zip -d ./closure-compiler/
 #RUN echo "<html><head><title>Hello World</title></head> <body><script src=\"hello-compiled.js\"></script></body></html>" > test.html
 
 ENV EMSCRIPTEN="/build/emsdk/fastcomp/emscripten" \
-    CLOSURE_JAR="/build/closure-compiler/closure-compiler-v20190909.jar"
-
+    CLOSURE_JAR="/build/closure-compiler/closure-compiler-v20190909.jar" \
+    PORT=80
+    
 RUN mkdir project
 
-
-#COPY freeglut ./project/freeglut
-#COPY googletest ./project/googletest
-#COPY liquidfun ./project/liquidfun
-#RUN cd project/liquidfun/Box2D/lfjs \
-#    make \
-#    ./uglify.sh
-
-# copy build with: docker cp <container>:/build/project/liquidfun/Box2D/lfjs
-#`Box2D/lfjs/index.html' in your browser
+EXPOSE 80

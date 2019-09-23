@@ -1,0 +1,22 @@
+{
+  "name": "liquidfun",
+  "version": "1.0.0",
+  "description": "<img src=\"liquidfun/Box2D/Documentation/Programmers-Guide/html/liquidfun-logo-square-small.png\" alt=\"LiquidFun logo\" style=\"float:right;\" />",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ersteller/liquidfun.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ersteller/liquidfun/issues"
+  },
+  "homepage": "https://github.com/ersteller/liquidfun#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
