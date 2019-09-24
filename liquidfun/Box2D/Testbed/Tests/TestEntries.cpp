@@ -28,6 +28,7 @@
 	#include "GL/freeglut.h"
 #endif
 
+//#include "AABB.h"
 #include "AddPair.h"
 #include "ApplyForce.h"
 #include "BodyTypes.h"
@@ -55,6 +56,7 @@
 #include "Mobile.h"
 #include "MobileBalanced.h"
 #include "MotorJoint.h"
+#include "MutualForce.h"
 #include "OneSidedPlatform.h"
 #include "Pinball.h"
 #include "PolyCollision.h"
@@ -103,6 +105,8 @@
 
 TestEntry g_testEntries[] =
 {
+	{"MutualForce", MutualForce::Create},
+	//{"AABB", AABBs::Create},
 	{"Sandbox", Sandbox::Create},
 	{"Sparky", Sparky::Create},
 	{"DamBreak", DamBreak::Create},
