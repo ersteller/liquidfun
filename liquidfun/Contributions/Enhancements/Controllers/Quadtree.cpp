@@ -1,6 +1,6 @@
-#pragma once
-#include <limits>
-#include <deque>
+
+#include "Quadtree.h"
+
 //#define max(x,y) x>=y?x:y
 
 /* this should be usable like:
@@ -29,117 +29,7 @@ stolen from https://code.google.com/p/kyle/
 /* 1. make round static bodys to a bin */
 /* 2. tidal force or impact should break bins (testcase: check roche border) d= 2.423 * R * (rohM/rohm)^(1/3)*/
 
-#define maxParticles 1
-
-class Tree
-{
-public:
-	
-	struct HandleAndPos
-	{
-		b2ParticleHandle* handle;
-		b2Vec2*           pos;
-	};
-
-	int nParticles;
-	int nSubParticles;
-	std::deque<HandleAndPos*> particles;
-	std::deque<HandleAndPos*> subparticles;
-	std::deque<HandleAndPos*>* ptmpparticles;
-	b2Vec2 CenterOfMass;
-	float32 Mass;
-
-	bool hasChildren;
-	Tree *nw, *ne, *sw, *se; 
-	Tree *parent;
-	float minX, minY, midX, midY, maxX, maxY;
-
-	/* used for debug rendering tree */
-	b2World* m_world;
-	b2Body* m_debugBody;
-	
-	Tree() :
-		nParticles(0),
-		nSubParticles(0),
-		hasChildren(false),
-		CenterOfMass(0.f,0.f),
-		Mass(0),
-		parent(NULL),
-		m_debugBody(NULL),
-		nw(NULL),ne(NULL),
-		sw(NULL),se(NULL),
-		minX(0), minY(0),
-		midX(0), midY(0),
-		maxX(0), maxY(0) {
-	}
-	Tree(float _minX, float _minY, float _maxX, float _maxY, Tree* pparent) :
-		nParticles(0),
-		nSubParticles(0),
-		hasChildren(false),
-		CenterOfMass(0.f,0.f),
-		Mass(0),
-		parent(pparent),
-		m_debugBody(NULL),
-		nw(NULL),ne(NULL),
-		sw(NULL),se(NULL),
-		minX(_minX), minY(_minY),
-		maxX(_maxX), maxY(_maxY) {
-		setMid();
-	}
-
-	// not in step() please 
-	~Tree() {
-		destroyBox();
-		delParticles();
-		if(hasChildren || nw != NULL) {
-			delete nw; 
-			delete ne;
-			delete sw;
-			delete se;
-			nw = NULL;
-			ne = NULL;
-			sw = NULL;
-			se = NULL;
-		}
-	}
-
-	void setMid() {
-		midX = (minX + maxX) / 2;
-		midY = (minY + maxY) / 2;
-	}
-
-	b2Vec2* GetNewDirection(b2Vec2* ptOrigin)
-	{
-		b2Vec2* ptRes = new b2Vec2;
-
-		// direction
-		ptRes->x = midX - ptOrigin->x;
-		ptRes->y = midY - ptOrigin->y;
-		return ptRes;
-	}
-
-
-	Tree* iterator()
-	{
-		if(parent)
-			return parent->iterator(); // returns root pointer
-		else
-			return this;
-	}
-
-	int GetDepth()
-	{
-		Tree* w = this;
-		int d = 0;
-		while (w->parent != NULL)
-		{
-			d++;
-			w = w->parent;
-		}
-		return d;
-	}
-
-	char* getAncestors(char* buff)
+	char* Tree::getAncestors(char* buff)
 	{
 		Tree* w = this;
 		int d = GetDepth() * 3;
@@ -166,7 +56,7 @@ public:
 	// k error between 0 and 1 
 	// if lager than 1 we are only evaluating root 
 	// if k == 0 we use direct method
-	float32 GetK(b2Vec2* cur)
+	float32 Tree::GetK(b2Vec2* cur)
 	{
 		// spread of box
 		b2Vec2 direction;
@@ -196,7 +86,7 @@ public:
 
 
 	/// find next node after this one (sequence is nw --> ne --> sw --> se --> parent-parent)
-	Tree* Next(float32 kerror, b2Vec2* cur)
+	Tree* Tree::Next(float32 kerror, b2Vec2* cur)
 	{	
 		Tree* ret = NULL;
 		Tree* worker = this;
@@ -258,21 +148,7 @@ public:
 			return NULL;	
 	}
 
-	std::deque<HandleAndPos*>* GetParticles()
-	{	// member of the tree updatet with each add function
-		if (hasChildren)
-		{ 
-			if (!subparticles.size())
-			{ // try to avoid collecting child particles too many times
-				assert(0); // we should have suparticles traked by add function
-			}
-			return &subparticles;
-		}
-		else
-			return &particles;
-	}
-
-	void UpdateCenterOfMass(b2Vec2* cur, float32 CurMass)
+	void Tree::UpdateCenterOfMass(b2Vec2* cur, float32 CurMass)
 	{
 		float32 NewMass = Mass + CurMass;
 
@@ -282,7 +158,7 @@ public:
 		Mass = NewMass;
 	}
 
-	HandleAndPos* add(b2Vec2* cur, const b2ParticleHandle* phP, HandleAndPos* ptHPin = NULL) {
+	Tree::HandleAndPos* Tree::add(b2Vec2 * cur, const b2ParticleHandle * phP, Tree::HandleAndPos *ptHPin) {
 		// TODO: maybe optimizable
 		HandleAndPos* pRes = NULL;
 		
@@ -402,7 +278,7 @@ public:
 		return pRes; // return pointer of partricle for subparticle list of parents
 	}
 
-	void setup(b2Vec2* all, int32 iParticleCount) 
+	void Tree::setup(b2Vec2* all, int32 iParticleCount) 
 	{
 		int n = iParticleCount;
 		if(n > 0) 
@@ -439,28 +315,12 @@ public:
 		}
 	}
 
-
-	void delParticles()
-	{
-		if (nParticles > 0)
-		// delete all storage structures in the particle queue
-		for (std::deque<HandleAndPos*>::iterator it = particles.begin();
-				it != particles.end();
-				it++ )
-		{
-			delete it[0];
-		}
-		particles.clear();
-		nParticles = 0;
-	}
-
-
 	/*cleanup tree 
 	particlereferences are removed from tree
 	nodes without particles and children (border cleanup)
 	delets particle list 
 	keeps children for later use if they just had particles or subparticles */
-	void cleanup()
+	void Tree::cleanup()
 	{
 		if (hasChildren)
 		{
@@ -494,82 +354,10 @@ public:
 		destroyBox();
 	}
 
-
-
-	/*
-	vector<Particle*> getNeighbors(float targetX, float targetY, float radius) {
-		vector<Particle*> intersection, neighbors;
-		getIntersection(intersection, targetX, targetY, radius);
-		float xd, yd, rsq;
-		float maxrsq = radius * radius;
-		int n = intersection.size();
-		for(int i = 0; i < n; i++) {
-			Particle& cur = *intersection[i];
-			xd = targetX - cur.x;
-			yd = targetY - cur.y;
-			rsq = xd * xd + yd * yd;
-			if(rsq < maxrsq)
-				neighbors.push_back(&cur);
-		}
-		return neighbors;
-	}*/
-	/*
-	void getIntersection(vector<Particle*>& intersection, float targetX, float targetY, float radius) {
-		if(targetX > minX - radius && targetX < maxX + radius &&
-			targetY > minY - radius && targetY < maxY + radius) {
-			if(nParticles) {
-				for(int i = 0; i < nParticles; i++)
-					intersection.push_back(particles[i]);
-			} else if(hasChildren) {
-				nw->getIntersection(intersection, targetX, targetY, radius);
-				ne->getIntersection(intersection, targetX, targetY, radius);
-				sw->getIntersection(intersection, targetX, targetY, radius);
-				se->getIntersection(intersection, targetX, targetY, radius);
-			}
-		}
-	}
-	*/
-	/*
-	void addForce(float targetX, float targetY, float radius, float scale) {
-		std::deque<Tree*> toProcess;
-		toProcess.push_back(this);
-		float xd, yd, length, effect;
-		float sqradius = radius * radius;
-		while(!toProcess.empty()) {
-			Tree& curTree = *(toProcess.front());
-			toProcess.pop_front();
-			if(targetX > curTree.minX - radius && targetX < curTree.maxX + radius &&
-				targetY > curTree.minY - radius && targetY < curTree.maxY + radius) {
-				if(curTree.nParticles) {
-					for(int i = 0; i < curTree.nParticles; i++) {
-						Particle& curParticle = *(curTree.particles[i]);
-						xd = curParticle.x - targetX;
-						yd = curParticle.y - targetY;
-						if(xd != 0 && yd != 0) {
-							length = xd * xd + yd * yd;
-							if(length < sqradius) {
-								length = sqrtf(length);
-								xd /= length;
-								yd /= length;
-								effect = 1 - (length / radius);
-								effect *= scale;
-								curParticle.xf += effect * xd;
-								curParticle.yf += effect * yd;
-							}
-						}
-					}
-				} else if(curTree.hasChildren) {
-					toProcess.push_back(curTree.nw);
-					toProcess.push_back(curTree.ne);
-					toProcess.push_back(curTree.sw);
-					toProcess.push_back(curTree.se);
-				}
-			}
-		}
-	}*/
-
-
-	void makeBox()
+    /* this is a debug function; 
+	it creates the b2bodys around edges of this leef of the 
+	tree called from drawonlythis */
+	void Tree::makeBox()
 	{
 		b2BodyDef bd;
 		m_debugBody = m_world->CreateBody(&bd);
@@ -583,27 +371,10 @@ public:
 		shape.CreateLoop(vertices, 4);
 		m_debugBody->CreateFixture(&shape, 0.0f); 
 	}
-
-	void destroyBox()
-	{
-		if(m_debugBody)
-		{	
-			m_world->DestroyBody(m_debugBody);
-			m_debugBody = NULL;
-		}
-	}
-
-	void drawonlythis(b2World* m_world) {
-		this->m_world = m_world;
-		//printf("%f" ,(this->maxX - this->minX ) / (this->maxY - this->minY)); 
-		
-		destroyBox();
-		makeBox();
-		
-	}
-
-
-	void draw(b2World* m_world) {
+	
+    /* this is a debug function; 
+	it draws a debugbodys around the edges of the tree recursifly */
+	void Tree::draw(b2World* m_world) {
 		this->m_world = m_world;
 		destroyBox();
 		if(nParticles)
@@ -617,4 +388,3 @@ public:
 			se->draw( m_world);
 		}
 	}
-};

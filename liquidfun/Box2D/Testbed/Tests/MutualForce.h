@@ -1,7 +1,7 @@
 #ifndef MUTUAL_FORCE_H
 #define MUTUAL_FORCE_H
 
-#include "Quadtree.h"
+#include "../../../Contributions/Enhancements/Controllers/Quadtree.h"
 
 class MutualForce : 	public Test
 {
@@ -179,7 +179,7 @@ public:
 
 				mass = it->Mass;
 				//seenmass +=mass; // debug help
-				CoM = it->CenterOfMass;
+				CoM = it->getCenterOfMass();
 
 				vDistance = CoM - vPos;
 				fltDistance = vDistance.Length();

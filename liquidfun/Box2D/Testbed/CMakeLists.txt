@@ -38,6 +38,9 @@ set(Testbed_Tests_SRCS
 	Tests/ContinuousTest.h
 	Tests/ConvexHull.h
 	Tests/ConveyorBelt.h
+	Tests/MutualForce.h
+	../../Contributions/Enhancements/Controllers/Quadtree.h
+	../../Contributions/Enhancements/Controllers/Quadtree.cpp
 	Tests/DistanceTest.h
 	Tests/Dominos.h
 	Tests/DumpShell.h
