@@ -41,6 +41,8 @@ set(Testbed_Tests_SRCS
 	Tests/MutualForce.h
 	../../Contributions/Enhancements/Controllers/Quadtree.h
 	../../Contributions/Enhancements/Controllers/Quadtree.cpp
+	../../Contributions/Enhancements/Controllers/b2MutualForceController.h
+	../../Contributions/Enhancements/Controllers/b2MutualForceController.cpp
 	Tests/DistanceTest.h
 	Tests/Dominos.h
 	Tests/DumpShell.h

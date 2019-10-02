@@ -24,14 +24,18 @@ stolen from https://code.google.com/p/kyle/
  value, the tree will approximate a binning system.
 */
 
-
-
-
 /* TODO: define qoutient s/d (spread / distance) to conditionally use above*/
 
 /* TODO: binning: find large bodies of connectect particles */
-/* 1. make round static bodys to a bin */
-/* 2. tidal force or impact should break bins (testcase: check roche border) d= 2.423 * R * (rohM/rohm)^(1/3)*/
+/* found the GrowParticleContactBuffer function. mabe we can use that to find particle blobs */
+/* blobs may become solid groups. but not sure about how to transition and when maybe 
+   depends on material (viskosity:whater never but rock maybe) */
+/* 1. make round static bodys to a bin / blob they are propably static for some time */
+/* 2. tidal force or impact should break bins to blobs (testcase: check roche border) d= 2.423 * R * (rohM/rohm)^(1/3)*/
+
+/* there should be a module: mutual gravity controller that implements a step which was originally done in the testbed 
+it should contain all parameters and maybe have some defined interface with a userdefined 
+ callback function maybe for each particle debugging */
 
 #define maxParticles 1
 
@@ -112,7 +116,8 @@ public:
 		midY = (minY + maxY) / 2;
 	}
 
-	b2Vec2* GetNewDirection(b2Vec2* ptOrigin)
+    
+	/*b2Vec2* GetNewDirection(b2Vec2* ptOrigin)//
 	{
 		b2Vec2* ptRes = new b2Vec2;
 
@@ -120,7 +125,7 @@ public:
 		ptRes->x = midX - ptOrigin->x;
 		ptRes->y = midY - ptOrigin->y;
 		return ptRes;
-	}
+	}*/
 
 
 	Tree* iterator()

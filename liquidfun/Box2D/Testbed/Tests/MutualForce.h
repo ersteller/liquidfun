@@ -2,18 +2,19 @@
 #define MUTUAL_FORCE_H
 
 #include "../../../Contributions/Enhancements/Controllers/Quadtree.h"
+#include "../../../Contributions/Enhancements/Controllers/b2MutualForceController.h"
 
 class MutualForce : 	public Test
 {
 public:
 	MutualForce()
-		
 	{
 		m_particleFlags = 0;
 		m_tree = NULL;
 		m_radius = 0.025f;
 		m_tree = new Tree;
 		m_world->SetGravity(b2Vec2(0.0f, 0.0f));
+		m_mfctl = new b2MutualForceController;
 
 		{
 			/* Outer Frame */
@@ -36,16 +37,23 @@ public:
 		{
 			/* spawn particles shape */
 			b2PolygonShape shape;
-			shape.SetAsBox(0.8f, 0.8f, b2Vec2(1.2f, 1.01f), 0);
+			shape.SetAsBox(1.5f, 1.5f, b2Vec2(1.2f, 1.01f), 0);
 			b2ParticleGroupDef pd;
 			pd.flags = TestMain::GetParticleParameterValue();
 			pd.shape = &shape;
 			b2ParticleGroup * const group = m_particleSystem->CreateParticleGroup(pd);
+
+
 			if (pd.flags & b2_colorMixingParticle)
 			{
 				ColorParticleGroup(group, 0);
 			}
+
+			m_mfctl->AddGroup(m_particleSystem);
 		}
+
+		/* put particles in Mutualforce controller */
+		// b2Vec2* paHeadPos = m_particleSystem->GetPositionBuffer();
 
 		TestMain::SetRestartOnParticleParameterChange(false);
 
@@ -107,11 +115,14 @@ public:
 		TestMain::SetParticleParameterValue(m_particleFlags);
 	}
 
-	virtual void Step(Settings *settings)
+	void Step(Settings *settings)
 	{
 		int32 iParticleCount =  m_particleSystem->GetParticleCount();	
 		b2Vec2* paHeadPos = m_particleSystem->GetPositionBuffer();
 		b2ParticleColor* paColor = m_particleSystem->GetColorBuffer();
+
+
+
 		b2Vec2 vPos;
 
 		b2Vec2 vDistance;
@@ -124,124 +135,14 @@ public:
 		
 		// Constants 
 		//float32 fltMass = 1;
-		//float32 mass = body->GetMass();
 		float32 fltOurG = 0.00002f;
 
 
+        /* this shall be all of the interface needed to be provided */
+		// iParticleCount
+		// paHeadPos
+		// paColor
 
-
-		// once every steps
-		if (this->m_stepCount % 1 == 0)
-		{	
-			m_tree->cleanup(); 
-			m_tree->setup(paHeadPos, iParticleCount);
-			//printf(" ################## add to tree ");
-			for (int32 idx = 0; idx < iParticleCount; idx++)
-			{
-				//printf("%d ",idx);
-				m_tree->add(&paHeadPos[idx], m_particleSystem->GetParticleHandleFromIndex(idx));
-			}
-			//printf("\n\n\n\n");
-			// m_tree->draw(m_world);
-		}
-		
-
-
-		for (int32 idx = 0; idx < iParticleCount; idx++)
-		{
-			// particle of interest
-			vPos = paHeadPos[idx];
-			//paColor[idx].Set(255,255,255,128);
-			vForce = b2Vec2(0.0f, 0.0f);
-			float32 k = 0.5f;
-
-			//printf("\n %d with \n",idx);
-
-			int iterations = 0;
-			// float32 seenmass = 0;  // debug help
-			for (Tree* it = m_tree->iterator()->Next(k,&vPos);
-				it != NULL;
-				it = it->Next(k,&vPos))
-			{
-				//printf("    d:%d X:%f Y:%f K:%f \n",it->GetDepth() ,it->midX, it->midY, it->GetK(&vPos));
-				
-
-				// highlight all nodes of first particle
-				//if (idx == 0)
-				//{
-					//char szAncestors[200] = {0};
-					//it->drawonlythis(m_world);
-
-					//printf("idx %d iteration %d treeid %d %s\n",idx,iterations,  (int)it , it->getAncestors(szAncestors));
-				//}
-
-				iterations++;
-
-				mass = it->Mass;
-				//seenmass +=mass; // debug help
-				CoM = it->getCenterOfMass();
-
-				vDistance = CoM - vPos;
-				fltDistance = vDistance.Length();
-				
-				if ( fltDistance < m_radius/2)
-				{
-
-					// this is too cloose to exist must be touching forces or self
-					//printf(" ### skipping distance %f idx %d iteration %d treeid %d\n",fltDistance,idx,iterations,  (int)it );
-					continue;
-				}
-
-				vDistance.Normalize();
-
-				fltForce = fltOurG * mass / (fltDistance * fltDistance) ; //b2Dot(vDistance,vDistance)
-				vForce += vDistance * fltForce;	
-			}
-
-			//printf("idx %d seenmass %f\n",idx, seenmass);
-
-			/*printf("  %f Force \n",vForce.Length());*/
-
-			/* // direct method
-			for (int32 jdx = 0; jdx < iParticleCount; jdx++)
-			{	
-				if( jdx == idx)
-				{
-					continue;
-				}
-
-				vDistance = paHeadPos[jdx] - vPos;
-				//if( 5 < (
-				fltDistance = vDistance.Length();
-				//))
-				//{   
-				//	// limit distance
-				//	continue;
-				//}
-
-				vDistance.Normalize();
-
-				fltForce = fltOurG / (fltDistance*fltDistance) ; //b2Dot(vDistance,vDistance)
-				vForce += vDistance * fltForce;	
-			}*/
-
-			float32 force = vForce.Length();
-			if (force > 10)
-			{
-				// limit force
-				//printf("normalyze idx: %d\n",idx);
-				vForce.Normalize();
-				paColor[idx].Set(200,10,10,250);
-			}
-			else 
-			{
-				paColor[idx].Set( (uint8)(255*(1-force)), (uint8)(255*(1-force)), (uint8)(255*(1-force)),(uint8)(255*(1-force)));
-			}
-
-			// aply sum of all forces to particle
-			m_particleSystem->ParticleApplyForce( idx, vForce);	
-			//printf("iterations %d\n\n",iterations);
-		}
 		paColor[0].Set(0,0,255,255);
 
 
@@ -253,6 +154,7 @@ public:
 
 	Tree* m_tree;
 	float32 m_radius;
+	b2MutualForceController* m_mfctl;
 
 	float32 GetDefaultViewZoom() const
 	{
@@ -263,6 +165,8 @@ public:
 	{
 		return new MutualForce;
 	}
+
+	/* TODO cleanup some code () */
 
 private:
 	uint32 m_particleFlags;
