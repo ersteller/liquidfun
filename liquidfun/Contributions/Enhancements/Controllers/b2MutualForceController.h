@@ -11,15 +11,16 @@ class b2MutualForceController /*: public b2ControllerDef*/
 {
     public: 
 	void AddGroup(b2ParticleSystem* particleSystem);
-	void Step(const b2TimeStep& step);
-	//~b2MutualForceController();
+	void Step(/*const b2TimeStep& step*/);
+	b2MutualForceController();
+	~b2MutualForceController();
 
 	private:
 	b2ParticleGroup* m_group;
 	int m_stepCount;
 	Tree* m_tree;
 	b2ParticleSystem* m_particleSystem;
-  	float m_radius = 0.025f;
+  	float m_radius;
 };
 
 

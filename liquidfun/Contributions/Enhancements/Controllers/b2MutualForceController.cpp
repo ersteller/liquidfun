@@ -1,15 +1,24 @@
 #include "b2MutualForceController.h"
 
 
-
-/*b2MutualForceController::~b2MutualForceController()
+b2MutualForceController::~b2MutualForceController()
 {
 	//Remove attached bodies
-	Clear();
-}*/
+	//Clear();
+}
+
+b2MutualForceController::b2MutualForceController()
+{
+	// constructor
+	m_group = NULL;
+	m_stepCount = 0;
+	m_tree = new Tree;
+	m_particleSystem = NULL;
+  	m_radius = 0.025f;
+}
 
 
-void b2MutualForceController::Step(const b2TimeStep& step)
+void b2MutualForceController::Step(/*const b2TimeStep& step*/)
 {
 
     int32 iParticleCount =  m_particleSystem->GetParticleCount();	
@@ -29,6 +38,25 @@ void b2MutualForceController::Step(const b2TimeStep& step)
     // Constants 
     //float32 fltMass = 1;
     float32 fltOurG = 0.00002f;
+
+
+
+
+     // once every steps
+    if (this->m_stepCount % 1 == 0)
+    {	
+        m_tree->cleanup(); 
+        m_tree->setup(paHeadPos, iParticleCount);
+        //printf(" ################## add to tree ");
+        for (int32 idx = 0; idx < iParticleCount; idx++)
+        {
+            //printf("%d ",idx);
+            m_tree->add(&paHeadPos[idx], m_particleSystem->GetParticleHandleFromIndex(idx));
+        }
+        //printf("\n\n\n\n");
+        // m_tree->draw(m_world);
+    }
+
 
     for (int32 idx = 0; idx < iParticleCount; idx++)
     {
@@ -135,21 +163,6 @@ void b2MutualForceController::AddGroup(b2ParticleSystem* particleSystem)
     int32 iParticleCount =  m_particleSystem->GetParticleCount();	
 	b2Vec2* paHeadPos = m_particleSystem->GetPositionBuffer();
 	b2ParticleColor* paColor = m_particleSystem->GetColorBuffer();
-
-    // once every steps
-    if (this->m_stepCount % 1 == 0)
-    {	
-        m_tree->cleanup(); 
-        m_tree->setup(paHeadPos, iParticleCount);
-        //printf(" ################## add to tree ");
-        for (int32 idx = 0; idx < iParticleCount; idx++)
-        {
-            //printf("%d ",idx);
-            m_tree->add(&paHeadPos[idx], m_particleSystem->GetParticleHandleFromIndex(idx));
-        }
-        //printf("\n\n\n\n");
-        // m_tree->draw(m_world);
-    }
 
 }
 

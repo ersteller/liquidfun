@@ -147,6 +147,7 @@ public:
 
 
 		//m_particleSystem->SetColorBuffer(paColor, 1);	
+		m_mfctl->Step();
 		Test::Step(settings);
 	}
 
