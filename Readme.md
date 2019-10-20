@@ -59,5 +59,14 @@ after build is done a webserver is started for the testbed.
 # Test
 Then browse to localhost:80 and visit the testbed 
 
+# TODO:
+## for lighting
+http://www.java-gaming.org/topics/libgdx-trying-to-get-my-head-around-box2d-lights/38424/view.html
+### shader
+and the shader ```lightingshader.sdrsrc``` found there: 
+found on youtube usr:Šklopec https://youtu.be/fsbECSpwtig
 
-
+## for sound
+add https://www.sfml-dev.org/
+like this https://github.com/SonarSystems/SFML-Box2D-Tutorials or like this https://gist.github.com/jmcgill/1396667
+and absolutly like so https://github.com/vanderlin/Box2dLights
