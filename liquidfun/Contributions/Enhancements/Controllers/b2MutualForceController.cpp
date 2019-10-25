@@ -137,12 +137,10 @@ void b2MutualForceController::Step(/*const b2TimeStep& step*/)
         }*/
 
         float32 force = vForce.Length();
-        if (force > 10)
+        if (force > 0.1)
         {
-            // limit force
-            //printf("normalyze idx: %d\n",idx);
-            vForce.Normalize();
-            paColor[idx].Set(200,10,10,250);
+              // color high force
+              paColor[idx].Set(200,10,10,250);
         }
         else 
         {
@@ -159,11 +157,6 @@ void b2MutualForceController::Step(/*const b2TimeStep& step*/)
 void b2MutualForceController::AddGroup(b2ParticleSystem* particleSystem)
 {
     this->m_particleSystem = particleSystem;
-
-    int32 iParticleCount =  m_particleSystem->GetParticleCount();	
-	b2Vec2* paHeadPos = m_particleSystem->GetPositionBuffer();
-	b2ParticleColor* paColor = m_particleSystem->GetColorBuffer();
-
 }
 
 

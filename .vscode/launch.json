@@ -14,6 +14,18 @@
             "cwd": "${workspaceFolder}/build/Testbed/Debug",
             "environment": [],
             "externalConsole": true
+        },
+        {
+            "name": "(Windows) Launch Release",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/Testbed/Release/Testbed.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/build/Testbed/Release",
+            "environment": [],
+            "externalConsole": true
         }
+
     ]
 }

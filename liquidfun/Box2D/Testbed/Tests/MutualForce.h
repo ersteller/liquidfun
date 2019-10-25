@@ -1,7 +1,6 @@
 #ifndef MUTUAL_FORCE_H
 #define MUTUAL_FORCE_H
 
-#include "../../../Contributions/Enhancements/Controllers/Quadtree.h"
 #include "../../../Contributions/Enhancements/Controllers/b2MutualForceController.h"
 
 class MutualForce : 	public Test
@@ -10,9 +9,7 @@ public:
 	MutualForce()
 	{
 		m_particleFlags = 0;
-		m_tree = NULL;
 		m_radius = 0.025f;
-		m_tree = new Tree;
 		m_world->SetGravity(b2Vec2(0.0f, 0.0f));
 		m_mfctl = new b2MutualForceController;
 
@@ -44,10 +41,10 @@ public:
 			b2ParticleGroup * const group = m_particleSystem->CreateParticleGroup(pd);
 
 
-			if (pd.flags & b2_colorMixingParticle)
-			{
-				ColorParticleGroup(group, 0);
-			}
+			//if (pd.flags & b2_colorMixingParticle)
+			//{
+			//	ColorParticleGroup(group, 0);
+			//}
 
 			m_mfctl->AddGroup(m_particleSystem);
 		}
@@ -84,7 +81,7 @@ public:
 
 			case 'g':
 				if (m_world->GetGravity() == b2Vec2(0.0f, 0.0f))
-					m_world->SetGravity(b2Vec2(0.0f, -1.0f));
+					m_world->SetGravity(b2Vec2(0.0f, -10.f));
 				else
 					m_world->SetGravity(b2Vec2(0.0f, 0.0f));
 				break;
@@ -98,9 +95,8 @@ public:
 			default:
 				//printf("0x%X",key);
 				break;
-			
-
 		}
+		
 		printf("Damping: %f \n", flDamping);
 		m_particleSystem->SetDamping(flDamping);
 
@@ -121,39 +117,14 @@ public:
 		b2Vec2* paHeadPos = m_particleSystem->GetPositionBuffer();
 		b2ParticleColor* paColor = m_particleSystem->GetColorBuffer();
 
-
-
-		b2Vec2 vPos;
-
-		b2Vec2 vDistance;
-		b2Vec2 vForce;
-		float32 fltForce;
-		float32 fltDistance;
-
-		b2Vec2 CoM;
-		float32 mass;
-		
-		// Constants 
-		//float32 fltMass = 1;
-		float32 fltOurG = 0.00002f;
-
-
-        /* this shall be all of the interface needed to be provided */
-		// iParticleCount
-		// paHeadPos
-		// paColor
-
+		/* we mark particle 0 blue  */
 		paColor[0].Set(0,0,255,255);
-
 
 		//m_particleSystem->SetColorBuffer(paColor, 1);	
 		m_mfctl->Step();
 		Test::Step(settings);
 	}
 
-
-
-	Tree* m_tree;
 	float32 m_radius;
 	b2MutualForceController* m_mfctl;
 

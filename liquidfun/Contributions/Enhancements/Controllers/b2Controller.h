@@ -52,7 +52,7 @@ public:
 	virtual void Step(const b2TimeStep& step) = 0;
 
 	/// Controllers override this to provide debug drawing.
-	virtual void Draw(b2DebugDraw *debugDraw) {B2_NOT_USED(debugDraw);};
+    //	virtual void Draw(b2DebugDraw *debugDraw) {B2_NOT_USED(debugDraw);};
 
 	/// Adds a body to the controller list.
 	void AddBody(b2Body* body);
