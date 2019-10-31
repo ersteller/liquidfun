@@ -8,15 +8,15 @@ function b2MutualForceController() {
   }
   
 var b2MutualForceController_Step =
-    Module.cwrap('b2MutualForceController_Step', 'number', ['number', 'number', 'number']);
+    Module.cwrap('b2MutualForceController_Step', 'null', ['number']);
 var b2MutualForceController_AddGroup =
-    Module.cwrap('b2MutualForceController_AddGroup', 'null', ['number']);
+    Module.cwrap('b2MutualForceController_AddGroup', 'null', ['number', 'number']);
 
 b2MutualForceController.prototype.Step = function() {
     b2MutualForceController_Step(this.ptr);
 };
 
 b2MutualForceController.prototype.AddGroup = function(p) {
-    return b2MutualForceController_AddGroup(this.ptr, p.x, p.y);
+    b2MutualForceController_AddGroup(this.ptr, p);
 };
   
