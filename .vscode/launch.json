@@ -5,6 +5,12 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "type": "node",
+            "request": "attach",
+            "name": "Docker: Attach to Node",
+            "remoteRoot": "/usr/src/app"
+        },
+        {
             "name": "(Windows) Launch Debug",
             "type": "cppvsdbg",
             "request": "launch",
@@ -25,7 +31,8 @@
             "cwd": "${workspaceFolder}/build/Testbed/Release",
             "environment": [],
             "externalConsole": true
-        }
+        },
+
 
     ]
 }

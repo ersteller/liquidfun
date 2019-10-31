@@ -4,14 +4,20 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
+            "label": "buildDocker",
             "type": "shell",
-            "command": "docker build -f Dockerfile . -t liquidfunbuilder:latest",
+            "command": "docker build -f Dockerfile . -t liquidfunbuilder:latest"
+        },
+        {
+            "label": "buildjs",
+            "type": "shell",
+            "command": "docker run -v $(realpath $(dirname $0)):/build/project -v liquidfun_cache:/root/.emscripten_cache -it liquidfunbuilder:latest /bin/bash -c \"cd project/liquidfun/Box2D/lfjs && make && ./uglify.sh\"",
             "group": {
                 "kind":"build",
                 "isDefault": true
             }
-            
+            // build js and run server for testing
+            //docker run -it -p 80:80 -v %~dp0:/build/project -v liquidfun_cache:/root/.emscripten_cache liquidfunbuilder:latest /bin/bash -c "source ./emsdk/emsdk_env.sh && cd project/liquidfun/Box2D/lfjs && make && echo start node && cd /build/project && /build/emsdk/node/12.9.1_64bit/bin/npm install && node server.js"
         }
     ]
 }
