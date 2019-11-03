@@ -8,7 +8,8 @@
             "type": "node",
             "request": "attach",
             "name": "Docker: Attach to Node",
-            "remoteRoot": "/usr/src/app"
+            "remoteRoot": "/usr/src/app",
+            "preLaunchTask": "runserver"
         },
         {
             "name": "(Windows) Launch Debug",
@@ -31,8 +32,6 @@
             "cwd": "${workspaceFolder}/build/Testbed/Release",
             "environment": [],
             "externalConsole": true
-        },
-
-
+        }
     ]
 }
