@@ -1209,11 +1209,11 @@ function updateGlobalBufferAndViews(buf) {
 
 
 var STATIC_BASE = 1024,
-    STACK_BASE = 5255824,
+    STACK_BASE = 5256144,
     STACKTOP = STACK_BASE,
-    STACK_MAX = 12944,
-    DYNAMIC_BASE = 5255824,
-    DYNAMICTOP_PTR = 12928;
+    STACK_MAX = 13264,
+    DYNAMIC_BASE = 5256144,
+    DYNAMICTOP_PTR = 13248;
 
 assert(STACK_BASE % 16 === 0, 'stack must start aligned');
 assert(DYNAMIC_BASE % 16 === 0, 'heap must start aligned');
@@ -1710,8 +1710,8 @@ Module['asm'] = function(global, env, providedBuffer) {
   ;
   // import table
   env['table'] = wasmTable = new WebAssembly.Table({
-    'initial': 310,
-    'maximum': 310 + 0,
+    'initial': 317,
+    'maximum': 317 + 0,
     'element': 'anyfunc'
   });
   // With the wasm backend __memory_base and __table_base and only needed for
@@ -1733,7 +1733,7 @@ var ASM_CONSTS = [];
 
 
 
-// STATICTOP = STATIC_BASE + 11920;
+// STATICTOP = STATIC_BASE + 12240;
 /* global initializers */  __ATINIT__.push({ func: function() { ___wasm_call_ctors() } });
 
 
@@ -1780,6 +1780,14 @@ var ASM_CONSTS = [];
       return demangleAll(js);
     }
 
+  function ___assert_fail(condition, filename, line, func) {
+      abort('Assertion failed: ' + UTF8ToString(condition) + ', at: ' + [filename ? UTF8ToString(filename) : 'unknown filename', line, func ? UTF8ToString(func) : 'unknown function']);
+    }
+
+  function ___cxa_allocate_exception(size) {
+      return _malloc(size);
+    }
+
   
   function _atexit(func, arg) {
       warnOnce('atexit() called, but EXIT_RUNTIME is not set, so atexits() will not be called. set EXIT_RUNTIME to 1 (see the FAQ)');
@@ -1793,6 +1801,28 @@ var ASM_CONSTS = [];
       ABORT = true;
   
       throw 'Pure virtual function called!';
+    }
+
+  
+  var ___exception_infos={};
+  
+  var ___exception_last=0;function ___cxa_throw(ptr, type, destructor) {
+      ___exception_infos[ptr] = {
+        ptr: ptr,
+        adjusted: [ptr],
+        type: type,
+        destructor: destructor,
+        refcount: 0,
+        caught: false,
+        rethrown: false
+      };
+      ___exception_last = ptr;
+      if (!("uncaught_exception" in __ZSt18uncaught_exceptionv)) {
+        __ZSt18uncaught_exceptionv.uncaught_exceptions = 1;
+      } else {
+        __ZSt18uncaught_exceptionv.uncaught_exceptions++;
+      }
+      throw ptr + " - Exception catching is disabled, this exception cannot be caught. Compile with -s DISABLE_EXCEPTION_CATCHING=0 or DISABLE_EXCEPTION_CATCHING=2 to catch.";
     }
 
   function ___cxa_uncaught_exceptions() {
@@ -2037,7 +2067,7 @@ function intArrayToString(array) {
 // ASM_LIBRARY EXTERN PRIMITIVES: Int8Array,Int32Array
 
 var asmGlobalArg = {};
-var asmLibraryArg = { "DYNAMICTOP_PTR": DYNAMICTOP_PTR, "__cxa_atexit": ___cxa_atexit, "__cxa_pure_virtual": ___cxa_pure_virtual, "__cxa_uncaught_exceptions": ___cxa_uncaught_exceptions, "__lock": ___lock, "__setErrNo": ___setErrNo, "__unlock": ___unlock, "abortOnCannotGrowMemory": abortOnCannotGrowMemory, "atexit": _atexit, "b2WorldBeginContactBody": _b2WorldBeginContactBody, "b2WorldEndContactBody": _b2WorldEndContactBody, "b2WorldPostSolve": _b2WorldPostSolve, "b2WorldPreSolve": _b2WorldPreSolve, "b2WorldQueryAABB": _b2WorldQueryAABB, "b2WorldRayCastCallback": _b2WorldRayCastCallback, "demangle": demangle, "demangleAll": demangleAll, "emscripten_get_heap_size": _emscripten_get_heap_size, "emscripten_memcpy_big": _emscripten_memcpy_big, "emscripten_resize_heap": _emscripten_resize_heap, "jsStackTrace": jsStackTrace, "memcpy": _memcpy, "memset": _memset, "sbrk": _sbrk, "stackTrace": stackTrace };
+var asmLibraryArg = { "DYNAMICTOP_PTR": DYNAMICTOP_PTR, "__assert_fail": ___assert_fail, "__cxa_allocate_exception": ___cxa_allocate_exception, "__cxa_atexit": ___cxa_atexit, "__cxa_pure_virtual": ___cxa_pure_virtual, "__cxa_throw": ___cxa_throw, "__cxa_uncaught_exceptions": ___cxa_uncaught_exceptions, "__lock": ___lock, "__setErrNo": ___setErrNo, "__unlock": ___unlock, "abortOnCannotGrowMemory": abortOnCannotGrowMemory, "atexit": _atexit, "b2WorldBeginContactBody": _b2WorldBeginContactBody, "b2WorldEndContactBody": _b2WorldEndContactBody, "b2WorldPostSolve": _b2WorldPostSolve, "b2WorldPreSolve": _b2WorldPreSolve, "b2WorldQueryAABB": _b2WorldQueryAABB, "b2WorldRayCastCallback": _b2WorldRayCastCallback, "demangle": demangle, "demangleAll": demangleAll, "emscripten_get_heap_size": _emscripten_get_heap_size, "emscripten_memcpy_big": _emscripten_memcpy_big, "emscripten_resize_heap": _emscripten_resize_heap, "jsStackTrace": jsStackTrace, "memcpy": _memcpy, "memset": _memset, "sbrk": _sbrk, "stackTrace": stackTrace };
 var asm = Module['asm'](asmGlobalArg, asmLibraryArg, buffer);
 var real____wasm_call_ctors = asm["__wasm_call_ctors"];
 asm["__wasm_call_ctors"] = function() {
@@ -2856,6 +2886,20 @@ asm["b2ParticleSystem_SetRadius"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return real__b2ParticleSystem_SetRadius.apply(null, arguments);
+};
+
+var real__b2MutualForceController_Step = asm["b2MutualForceController_Step"];
+asm["b2MutualForceController_Step"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__b2MutualForceController_Step.apply(null, arguments);
+};
+
+var real__b2MutualForceController_AddGroup = asm["b2MutualForceController_AddGroup"];
+asm["b2MutualForceController_AddGroup"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__b2MutualForceController_AddGroup.apply(null, arguments);
 };
 
 var real__malloc = asm["malloc"];
@@ -3741,6 +3785,18 @@ var _b2ParticleSystem_SetRadius = Module["_b2ParticleSystem_SetRadius"] = functi
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return Module["asm"]["b2ParticleSystem_SetRadius"].apply(null, arguments)
+};
+
+var _b2MutualForceController_Step = Module["_b2MutualForceController_Step"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["b2MutualForceController_Step"].apply(null, arguments)
+};
+
+var _b2MutualForceController_AddGroup = Module["_b2MutualForceController_AddGroup"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["b2MutualForceController_AddGroup"].apply(null, arguments)
 };
 
 var _malloc = Module["_malloc"] = function() {
