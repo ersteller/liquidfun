@@ -1,10 +1,7 @@
 
 /**@constructor*/
-function b2MutualForceController() {
-    this.body = null;
-    this.buffer = null;
-    this.ptr = null;
-    this.shape = null;
+function b2MutualForceController(ptr) {
+    this.ptr = ptr;
   }
   
 var b2MutualForceController_Step =
@@ -17,6 +14,6 @@ b2MutualForceController.prototype.Step = function() {
 };
 
 b2MutualForceController.prototype.AddGroup = function(p) {
-    b2MutualForceController_AddGroup(this.ptr, p);
+    b2MutualForceController_AddGroup(this.ptr, p.ptr);
 };
   

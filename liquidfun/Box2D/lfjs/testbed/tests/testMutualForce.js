@@ -26,12 +26,57 @@ function TestMutualForce() {
     pd.shape = shape;
     var group = particleSystem.CreateParticleGroup(pd);
 
+    var og = new b2Vec2(0.000000000000000e+00, 0.000000000000000e+01);
+    world.SetGravity(og);
+
     //add it to the mutual force contorller 
+    console.log("init mfc is called");
     var mfc = new b2MutualForceController();
     
     mfc.AddGroup(particleSystem);
+    console.log("done with init is called");
 
     // somewhere step needs to be called
 
   }
+  
+TestMutualForce.prototype.Keyboard = function(char) {
+    console.log("Keyboard is called");
+    switch (char) {
+      case 'a':
+ 
+        break;
+      case 's':
+
+        break;
+      case 'g':
+        var g = new b2Vec2(0.000000000000000e+00, -1.000000000000000e+01);
+        var og = new b2Vec2(0.000000000000000e+00, 0.000000000000000e+01);
+        if (world.GetGravity() == og) {
+            world.SetGravity(g);
+        } else {
+            world.SetGravity(og);
+        }
+
+        break;
+      case 'd':
+
+        break;
+      case 'q':
+        this.hz = Math.max(0, this.hz - 1);
+
+        break;
+      case 'e':
+        this.hz += 1;
+  
+        break;
+    }
+};
+  
+TestMutualForce.prototype.Step = function() {
+    console.log("step is called");
+
+    mfc.Step();
+    Step();
+};
   

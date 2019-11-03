@@ -20,6 +20,8 @@ $(O)/Collision/b2DynamicTree.cpp \
 $(O)/Collision/b2CollideEdge.cpp \
 $(O)/Collision/b2CollidePolygon.cpp \
 $(O)/Collision/b2Collision.cpp \
+$(O)/../../Contributions/Enhancements/Controllers/b2MutualForceController.cpp \
+$(O)/../../Contributions/Enhancements/Controllers/Quadtree.cpp \
 $(O)/Dynamics/b2Island.cpp \
 $(O)/Dynamics/b2WorldCallbacks.cpp \
 $(O)/Dynamics/Joints/b2MouseJoint.cpp \
@@ -137,6 +139,10 @@ B2MOTORJOINT = \
 	'_b2MotorJointDef_Create', \
 	'_b2MotorJointDef_InitializeAndCreate'
 
+B2MUTUALFORCECONTROLLER = \
+    '_b2MutualForceController_AddGroup', \
+	'_b2MutualForceController_Step' 
+
 B2MOUSEJOINT = \
 	'_b2MouseJoint_SetTarget', \
 	'_b2MouseJointDef_Create'
@@ -239,6 +245,7 @@ EXPORTS = EXPORTED_FUNCTIONS="[ \
 	$(B2JOINT), \
 	$(B2MOTORJOINT), \
 	$(B2MOUSEJOINT), \
+	$(B2MUTUALFORCECONTROLLER), \
 	$(B2PARTICLEGROUP), \
 	$(B2PARTICLESYSTEM), \
 	$(B2POLYGONSHAPE), \
