@@ -1833,6 +1833,10 @@ var ASM_CONSTS = [];
 
   function ___unlock() {}
 
+  function _abort() {
+      Module['abort']();
+    }
+
   function _b2WorldBeginContactBody(contactPtr) {
       b2World.BeginContactBody(contactPtr);
     }
@@ -2067,7 +2071,7 @@ function intArrayToString(array) {
 // ASM_LIBRARY EXTERN PRIMITIVES: Int8Array,Int32Array
 
 var asmGlobalArg = {};
-var asmLibraryArg = { "DYNAMICTOP_PTR": DYNAMICTOP_PTR, "__assert_fail": ___assert_fail, "__cxa_allocate_exception": ___cxa_allocate_exception, "__cxa_atexit": ___cxa_atexit, "__cxa_pure_virtual": ___cxa_pure_virtual, "__cxa_throw": ___cxa_throw, "__cxa_uncaught_exceptions": ___cxa_uncaught_exceptions, "__lock": ___lock, "__setErrNo": ___setErrNo, "__unlock": ___unlock, "abortOnCannotGrowMemory": abortOnCannotGrowMemory, "atexit": _atexit, "b2WorldBeginContactBody": _b2WorldBeginContactBody, "b2WorldEndContactBody": _b2WorldEndContactBody, "b2WorldPostSolve": _b2WorldPostSolve, "b2WorldPreSolve": _b2WorldPreSolve, "b2WorldQueryAABB": _b2WorldQueryAABB, "b2WorldRayCastCallback": _b2WorldRayCastCallback, "demangle": demangle, "demangleAll": demangleAll, "emscripten_get_heap_size": _emscripten_get_heap_size, "emscripten_memcpy_big": _emscripten_memcpy_big, "emscripten_resize_heap": _emscripten_resize_heap, "jsStackTrace": jsStackTrace, "memcpy": _memcpy, "memset": _memset, "sbrk": _sbrk, "stackTrace": stackTrace };
+var asmLibraryArg = { "DYNAMICTOP_PTR": DYNAMICTOP_PTR, "__assert_fail": ___assert_fail, "__cxa_allocate_exception": ___cxa_allocate_exception, "__cxa_atexit": ___cxa_atexit, "__cxa_pure_virtual": ___cxa_pure_virtual, "__cxa_throw": ___cxa_throw, "__cxa_uncaught_exceptions": ___cxa_uncaught_exceptions, "__lock": ___lock, "__setErrNo": ___setErrNo, "__unlock": ___unlock, "abort": _abort, "abortOnCannotGrowMemory": abortOnCannotGrowMemory, "atexit": _atexit, "b2WorldBeginContactBody": _b2WorldBeginContactBody, "b2WorldEndContactBody": _b2WorldEndContactBody, "b2WorldPostSolve": _b2WorldPostSolve, "b2WorldPreSolve": _b2WorldPreSolve, "b2WorldQueryAABB": _b2WorldQueryAABB, "b2WorldRayCastCallback": _b2WorldRayCastCallback, "demangle": demangle, "demangleAll": demangleAll, "emscripten_get_heap_size": _emscripten_get_heap_size, "emscripten_memcpy_big": _emscripten_memcpy_big, "emscripten_resize_heap": _emscripten_resize_heap, "jsStackTrace": jsStackTrace, "memcpy": _memcpy, "memset": _memset, "sbrk": _sbrk, "stackTrace": stackTrace };
 var asm = Module['asm'](asmGlobalArg, asmLibraryArg, buffer);
 var real____wasm_call_ctors = asm["__wasm_call_ctors"];
 asm["__wasm_call_ctors"] = function() {

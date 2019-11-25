@@ -262,4 +262,4 @@ EXPORTS = EXPORTED_FUNCTIONS="[ \
 
 # no optimization for debugging otherwise O2
 bindings.js:
-	$(EMSCRIPTEN)/emcc -I../ -o lf_core.js jsBindings/jsBindings.cpp $(OBJECTS) -s $(EXPORTS) -s "EXTRA_EXPORTED_RUNTIME_METHODS=['ccall','cwrap']" -s TOTAL_MEMORY=33554432 -O0 --js-library callbacks.js
+	$(EMSCRIPTEN)/emcc -I../ -o lf_core.js jsBindings/jsBindings.cpp $(OBJECTS) -s $(EXPORTS) -s "EXTRA_EXPORTED_RUNTIME_METHODS=['ccall','cwrap']" -s TOTAL_MEMORY=33554432 -O0 -g4 --source-map-base http://localhost:80/ --js-library callbacks.js

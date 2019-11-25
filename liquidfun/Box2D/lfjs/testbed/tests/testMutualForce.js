@@ -32,8 +32,10 @@ function TestMutualForce() {
     //add it to the mutual force contorller 
     console.log("init mfc is called");
     var mfc = new b2MutualForceController();
+
+    this.mfc = mfc;
     
-    mfc.AddGroup(particleSystem);
+    this.mfc.AddGroup(particleSystem);
     console.log("done with init is called");
 
     // somewhere step needs to be called
@@ -76,7 +78,7 @@ TestMutualForce.prototype.Keyboard = function(char) {
 TestMutualForce.prototype.Step = function() {
     console.log("step is called");
 
-    mfc.Step();
+    this.mfc.Step();
     Step();
 };
   

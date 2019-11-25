@@ -36,6 +36,8 @@ RUN mkdir closure-compiler && \
     curl https://dl.google.com/closure-compiler/compiler-latest.zip > ./closure-compiler/compiler-latest.zip
 RUN unzip ./closure-compiler/compiler-latest.zip -d ./closure-compiler/
 
+RUN echo "exit" >> ~/.bash_history
+
 # test of toolchain
 #RUN echo "/* A simple function. */ function hello(longName) {  alert('Hello, ' + longName);} hello('New User'); " > hello.js 
 #RUN java -jar ./closure-compiler/closure-compiler-v20190909.jar --js hello.js --js_output_file hello-compiled.js
