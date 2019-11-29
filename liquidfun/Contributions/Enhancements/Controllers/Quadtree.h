@@ -184,14 +184,16 @@ public:
 	void delParticles()
 	{
 		if (nParticles > 0)
-		for (std::deque<HandleAndPos*>::iterator it = particles.begin();
-				it != particles.end();
-				it++ )
 		{
-			delete it[0];
+			for (std::deque<HandleAndPos*>::iterator it = particles.begin();
+					it != particles.end();
+					it++ )
+			{
+				delete it[0];
+			}
+			particles.clear();
+			nParticles = 0;
 		}
-		particles.clear();
-		nParticles = 0;
 	}
 
 	/*cleanup tree 

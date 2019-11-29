@@ -1,4 +1,5 @@
 #include "b2MutualForceController.h"
+#include <stdio.h>
 
 
 b2MutualForceController::~b2MutualForceController()
@@ -39,11 +40,12 @@ void b2MutualForceController::Step(/*const b2TimeStep& step*/)
     //float32 fltMass = 1;
     float32 fltOurG = 0.00002f;
 
+    printf("hello from cpp step\n");
 
 
 
      // once every steps
-    if (this->m_stepCount % 1 == 0)
+    //if (this->m_stepCount % 1 == 0)
     {	
         m_tree->cleanup(); 
         m_tree->setup(paHeadPos, iParticleCount);
