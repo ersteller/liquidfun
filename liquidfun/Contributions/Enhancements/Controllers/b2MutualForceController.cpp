@@ -1,11 +1,16 @@
 #include "b2MutualForceController.h"
+
+// stuff for debugging 
 #include <stdio.h>
+#include <inttypes.h>
 
 
 b2MutualForceController::~b2MutualForceController()
 {
 	//Remove attached bodies
+    printf("in cpp this b2MutualForceController destructor \n");
 	//Clear();
+    //printf("start in cpp this b2MutualForceController constructor \n");
 }
 
 b2MutualForceController::b2MutualForceController()
@@ -40,12 +45,8 @@ void b2MutualForceController::Step(/*const b2TimeStep& step*/)
     //float32 fltMass = 1;
     float32 fltOurG = 0.00002f;
 
-    printf("hello from cpp step\n");
-
-
-
-     // once every steps
-    //if (this->m_stepCount % 1 == 0)
+    // once every steps
+    if (this->m_stepCount % 1 == 0)
     {	
         m_tree->cleanup(); 
         m_tree->setup(paHeadPos, iParticleCount);
@@ -53,12 +54,13 @@ void b2MutualForceController::Step(/*const b2TimeStep& step*/)
         for (int32 idx = 0; idx < iParticleCount; idx++)
         {
             //printf("%d ",idx);
+            
+            // printf("now particle add %"PRIx64"\n", (void*)&paHeadPos[idx]);
             m_tree->add(&paHeadPos[idx], m_particleSystem->GetParticleHandleFromIndex(idx));
         }
         //printf("\n\n\n\n");
         // m_tree->draw(m_world);
     }
-
 
     for (int32 idx = 0; idx < iParticleCount; idx++)
     {
@@ -115,30 +117,7 @@ void b2MutualForceController::Step(/*const b2TimeStep& step*/)
 
         /*printf("  %f Force \n",vForce.Length());*/
 
-        /* // direct method
-        for (int32 jdx = 0; jdx < iParticleCount; jdx++)
-        {	
-            if( jdx == idx)
-            {
-                continue;
-            }
-
-            vDistance = paHeadPos[jdx] - vPos;
-            //if( 5 < (
-            fltDistance = vDistance.Length();
-            //))
-            //{   
-            //	// limit distance
-            //	continue;
-            //}
-
-            vDistance.Normalize();
-
-            fltForce = fltOurG / (fltDistance*fltDistance) ; //b2Dot(vDistance,vDistance)
-            vForce += vDistance * fltForce;	
-        }*/
-
-        float32 force = vForce.Length();
+        /*float32 force = vForce.Length();
         if (force > 0.1)
         {
               // color high force
@@ -147,7 +126,7 @@ void b2MutualForceController::Step(/*const b2TimeStep& step*/)
         else 
         {
             paColor[idx].Set( (uint8)(255*(1-force)), (uint8)(255*(1-force)), (uint8)(255*(1-force)),(uint8)(255*(1-force)));
-        }
+        }*/
 
         // aply sum of all forces to particle
         m_particleSystem->ParticleApplyForce( idx, vForce);	

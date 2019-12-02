@@ -54,7 +54,8 @@ TestMutualForce.prototype.Keyboard = function(char) {
       case 'g':
         var g = new b2Vec2(0.000000000000000e+00, -1.000000000000000e+01);
         var og = new b2Vec2(0.000000000000000e+00, 0.000000000000000e+01);
-        if (world.GetGravity() == og) {
+        if (1)// world.GetGravity() == og) {
+        {
             world.SetGravity(g);
         } else {
             world.SetGravity(og);

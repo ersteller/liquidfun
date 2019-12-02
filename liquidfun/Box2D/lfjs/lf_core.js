@@ -1209,11 +1209,11 @@ function updateGlobalBufferAndViews(buf) {
 
 
 var STATIC_BASE = 1024,
-    STACK_BASE = 5258208,
+    STACK_BASE = 5258352,
     STACKTOP = STACK_BASE,
-    STACK_MAX = 15328,
-    DYNAMIC_BASE = 5258208,
-    DYNAMICTOP_PTR = 15312;
+    STACK_MAX = 15472,
+    DYNAMIC_BASE = 5258352,
+    DYNAMICTOP_PTR = 15456;
 
 assert(STACK_BASE % 16 === 0, 'stack must start aligned');
 assert(DYNAMIC_BASE % 16 === 0, 'heap must start aligned');
@@ -1223,7 +1223,7 @@ assert(DYNAMIC_BASE % 16 === 0, 'heap must start aligned');
 var TOTAL_STACK = 5242880;
 if (Module['TOTAL_STACK']) assert(TOTAL_STACK === Module['TOTAL_STACK'], 'the stack size can no longer be determined at runtime')
 
-var INITIAL_TOTAL_MEMORY = Module['TOTAL_MEMORY'] || 33554432;if (!Object.getOwnPropertyDescriptor(Module, 'TOTAL_MEMORY')) Object.defineProperty(Module, 'TOTAL_MEMORY', { get: function() { abort('Module.TOTAL_MEMORY has been replaced with plain INITIAL_TOTAL_MEMORY') } });
+var INITIAL_TOTAL_MEMORY = Module['TOTAL_MEMORY'] || 268435456;if (!Object.getOwnPropertyDescriptor(Module, 'TOTAL_MEMORY')) Object.defineProperty(Module, 'TOTAL_MEMORY', { get: function() { abort('Module.TOTAL_MEMORY has been replaced with plain INITIAL_TOTAL_MEMORY') } });
 
 assert(INITIAL_TOTAL_MEMORY >= TOTAL_STACK, 'TOTAL_MEMORY should be larger than TOTAL_STACK, was ' + INITIAL_TOTAL_MEMORY + '! (TOTAL_STACK=' + TOTAL_STACK + ')');
 
@@ -1733,7 +1733,7 @@ var ASM_CONSTS = [];
 
 
 
-// STATICTOP = STATIC_BASE + 14304;
+// STATICTOP = STATIC_BASE + 14448;
 /* global initializers */  __ATINIT__.push({ func: function() { ___wasm_call_ctors() } });
 
 
@@ -3015,6 +3015,13 @@ asm["b2ParticleSystem_SetRadius"] = function() {
   return real__b2ParticleSystem_SetRadius.apply(null, arguments);
 };
 
+var real__b2MutualForceController_Create = asm["b2MutualForceController_Create"];
+asm["b2MutualForceController_Create"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return real__b2MutualForceController_Create.apply(null, arguments);
+};
+
 var real__b2MutualForceController_Step = asm["b2MutualForceController_Step"];
 asm["b2MutualForceController_Step"] = function() {
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
@@ -3926,6 +3933,12 @@ var _b2ParticleSystem_SetRadius = Module["_b2ParticleSystem_SetRadius"] = functi
   assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
   assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
   return Module["asm"]["b2ParticleSystem_SetRadius"].apply(null, arguments)
+};
+
+var _b2MutualForceController_Create = Module["_b2MutualForceController_Create"] = function() {
+  assert(runtimeInitialized, 'you need to wait for the runtime to be ready (e.g. wait for main() to be called)');
+  assert(!runtimeExited, 'the runtime was exited (use NO_EXIT_RUNTIME to keep it alive after main() exits)');
+  return Module["asm"]["b2MutualForceController_Create"].apply(null, arguments)
 };
 
 var _b2MutualForceController_Step = Module["_b2MutualForceController_Step"] = function() {
