@@ -158,7 +158,7 @@ function Testbed(obj) {
 
   window.addEventListener( 'resize', onWindowResize, false );
 
-  testSwitch("TestWaveMachine");
+  testSwitch("TestMutualForce");
 
   render();
 }

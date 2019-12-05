@@ -5,7 +5,7 @@ function TestMutualForce() {
     var bodyDef = new b2BodyDef();
     var ground = world.CreateBody(bodyDef);
 
-    this.g = new b2Vec2(0.0, -1.0);
+    this.g = new b2Vec2(0.0, -4.0);
     this.og = new b2Vec2(0.0, 0.0);
     this.currg = this.og;
     world.SetGravity(this.currg);
@@ -44,18 +44,10 @@ function TestMutualForce() {
     pd.linearVelocity = new b2Vec2(0.00e+00, -dt * 8);
     var group2 = particleSystem.CreateParticleGroup(pd);
 
-
     //add it to the mutual force contorller 
-    console.log("init mfc is called");
     var mfc = new b2MutualForceController();
-
     this.mfc = mfc;
-    
     this.mfc.AddGroup(particleSystem);
-    console.log("done with init is called");
-
-    // somewhere step needs to be called
-
   }
   
 TestMutualForce.prototype.Keyboard = function(char) {
@@ -94,8 +86,6 @@ TestMutualForce.prototype.Keyboard = function(char) {
 };
   
 TestMutualForce.prototype.Step = function() {
-    console.log("step is called");
-
     this.mfc.Step();
     Step();
 };
