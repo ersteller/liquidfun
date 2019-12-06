@@ -1,0 +1,1 @@
+make && echo start node && cd /build/project && /build/emsdk/node/12.9.1_64bit/bin/npm install && node server.js

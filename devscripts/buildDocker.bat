@@ -1,0 +1,1 @@
+docker build -f devscripts/Dockerfile . -t liquidfunbuilder:latest

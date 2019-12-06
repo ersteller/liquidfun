@@ -1,0 +1,2 @@
+docker run -it -p 80:80 -v %~dp0../:/build/project -v liquidfun_cache:/root/.emscripten_cache liquidfunbuilder:latest /bin/bash -c "source ./emsdk/emsdk_env.sh && cd project/liquidfun/Box2D/lfjs && make && echo start node && cd /build/project/devscripts && /build/emsdk/node/12.9.1_64bit/bin/npm install && ln -sf /build/project/liquidfun/Box2D/lfjs  lfjs && node server.js & bash"
+REM docker run -it -p 80:80 -v %~dp0:/build/project -v liquidfun_cache:/root/.emscripten_cache liquidfunbuilder:latest /bin/bash -c "

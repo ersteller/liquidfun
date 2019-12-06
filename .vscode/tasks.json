@@ -1,0 +1,36 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "buildDocker",
+            "type": "shell",
+            "command": "docker build -f Dockerfile . -t liquidfunbuilder:latest"
+        },
+        {
+            "label": "buildjs",
+            "type": "shell",
+            "linux": {
+                "command": "docker run -v ${workspaceFolder}:/build/project -v liquidfun_cache:/root/.emscripten_cache liquidfunbuilder:latest /bin/bash -c \"cd project/liquidfun/Box2D/lfjs && make && ./uglify.sh\"",
+            },
+            "windows": {
+                "command": "docker run -v ${workspaceFolder}:/build/project -v liquidfun_cache:/root/.emscripten_cache liquidfunbuilder:latest /bin/bash -c 'source ./emsdk/emsdk_env.sh && cd project/liquidfun/Box2D/lfjs && make '"
+            },
+            "group": {
+                "kind":"build",
+                "isDefault": true
+            }
+            // build js and run server for testing
+            //docker run -it -p 80:80 -v %~dp0:/build/project -v liquidfun_cache:/root/.emscripten_cache liquidfunbuilder:latest /bin/bash -c "source ./emsdk/emsdk_env.sh && cd project/liquidfun/Box2D/lfjs && make && echo start node && cd /build/project && /build/emsdk/node/12.9.1_64bit/bin/npm install && node server.js"
+        },
+        {
+            "label": "runserver",
+            "type": "shell", 
+            "problemMatcher": [],
+            "command": "docker run -it  -p 80:80 -v ${workspaceFolder}:/build/project -v liquidfun_cache:/root/.emscripten_cache liquidfunbuilder:latest /bin/bash -c 'echo start node && cd /build/project && /build/emsdk/node/12.9.1_64bit/bin/npm install && node server.js'"
+            // build js and run server for testing
+            //docker run -it -p 80:80 -v %~dp0:/build/project -v liquidfun_cache:/root/.emscripten_cache liquidfunbuilder:latest /bin/bash -c "source ./emsdk/emsdk_env.sh && cd project/liquidfun/Box2D/lfjs && make && echo start node && cd /build/project && /build/emsdk/node/12.9.1_64bit/bin/npm install && node server.js"
+        }
+    ]
+}

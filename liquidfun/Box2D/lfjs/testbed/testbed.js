@@ -34,6 +34,18 @@ function printErrorMsg(msg) {
   document.body.appendChild(domElement);
 }
 
+// Assertion failed: you need to wait for the runtime to be ready (e.g. wait for main()
+Module['onRuntimeInitialized'] = onRuntimeInitialized;
+
+function onRuntimeInitialized() {
+  console.log("now onRuntimeInitialized and initTestbed");
+  initTestbed();
+}
+
+function firsttryentry() {
+  console.log("direct call from onload");
+}
+
 function initTestbed() {
   camera = new THREE.PerspectiveCamera(70
     , windowWidth / windowHeight
@@ -146,7 +158,7 @@ function Testbed(obj) {
 
   window.addEventListener( 'resize', onWindowResize, false );
 
-  testSwitch("TestWaveMachine");
+  testSwitch("TestMutualForce");
 
   render();
 }

@@ -20,6 +20,8 @@ $(O)/Collision/b2DynamicTree.cpp \
 $(O)/Collision/b2CollideEdge.cpp \
 $(O)/Collision/b2CollidePolygon.cpp \
 $(O)/Collision/b2Collision.cpp \
+$(O)/../../Contributions/Enhancements/Controllers/b2MutualForceController.cpp \
+$(O)/../../Contributions/Enhancements/Controllers/Quadtree.cpp \
 $(O)/Dynamics/b2Island.cpp \
 $(O)/Dynamics/b2WorldCallbacks.cpp \
 $(O)/Dynamics/Joints/b2MouseJoint.cpp \
@@ -123,8 +125,9 @@ B2FRICTIONJOINT = \
 
 B2GEARJOINT = \
 	'_b2GearJoint_GetRatio', \
-	'_b2GearJointDef_Create', \
-	'_b2GearJointDef_InitializeAndCreate'
+	'_b2GearJointDef_Create' 
+	
+	#'_b2GearJointDef_InitializeAndCreate'
 
 B2JOINT = \
 	'_b2Joint_GetBodyA', \
@@ -135,6 +138,11 @@ B2MOTORJOINT = \
 	'_b2MotorJoint_SetLinearOffset', \
 	'_b2MotorJointDef_Create', \
 	'_b2MotorJointDef_InitializeAndCreate'
+
+B2MUTUALFORCECONTROLLER = \
+    '_b2MutualForceController_Create', \
+    '_b2MutualForceController_AddGroup', \
+	'_b2MutualForceController_Step' 
 
 B2MOUSEJOINT = \
 	'_b2MouseJoint_SetTarget', \
@@ -225,7 +233,6 @@ B2WORLD = \
 	'_b2World_Step'
 
 EXPORTS = EXPORTED_FUNCTIONS="[ \
-	'_GenerateOffsets', \
 	$(B2BODY), \
 	$(B2CHAINSHAPE), \
 	$(B2CIRCLESHAPE), \
@@ -239,6 +246,7 @@ EXPORTS = EXPORTED_FUNCTIONS="[ \
 	$(B2JOINT), \
 	$(B2MOTORJOINT), \
 	$(B2MOUSEJOINT), \
+	$(B2MUTUALFORCECONTROLLER), \
 	$(B2PARTICLEGROUP), \
 	$(B2PARTICLESYSTEM), \
 	$(B2POLYGONSHAPE), \
@@ -250,6 +258,9 @@ EXPORTS = EXPORTED_FUNCTIONS="[ \
 	$(B2WHEELJOINT), \
 	$(B2WORLD) \
 	]"
+#'_GenerateOffsets', \
 
+
+# no optimization for debugging otherwise O2
 bindings.js:
-	$(EMSCRIPTEN)/emcc -I../ -o lf_core.js jsBindings/jsBindings.cpp $(OBJECTS) -s $(EXPORTS) -s TOTAL_MEMORY=33554432 -O2 --js-library callbacks.js
+	EMCC_DEBUG=1 $(EMSCRIPTEN)/emcc -I../ -o lf_core.js jsBindings/jsBindings.cpp $(OBJECTS) -s $(EXPORTS) -s "EXTRA_EXPORTED_RUNTIME_METHODS=['ccall','cwrap']" -s TOTAL_MEMORY=268435456 -O0 -g4 --source-map-base http://localhost:80/ --js-library callbacks.js

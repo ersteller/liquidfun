@@ -24,6 +24,7 @@ extern "C" {
 #include "Dynamics/Joints/b2WheelJointJsBindings.h"
 #include "Particle/b2ParticleGroupJsBindings.h"
 #include "Particle/b2ParticleSystemJsBindings.h"
+#include "Controller/b2MutualForceControllerJsBindings.h"
 void GenerateOffsets();
 }
 #include "Collision/b2CollisionJsBindings.cpp"
@@ -49,6 +50,7 @@ void GenerateOffsets();
 #include "Dynamics/Joints/b2WheelJointJsBindings.cpp"
 #include "Particle/b2ParticleGroupJsBindings.cpp"
 #include "Particle/b2ParticleSystemJsBindings.cpp"
+#include "Controller/b2MutualForceControllerJsBindings.cpp"
 
 
 /*
